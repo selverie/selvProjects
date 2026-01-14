@@ -6,6 +6,7 @@ import { FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
 import InteractiveGridBackground from '../components/InteractiveGridBackground';
 import mobileImage from '../assets/images/mobile.png';
 import websiteImage from '../assets/images/website.png';
+import biofaceImage from '../assets/images/bioface.png';
 
 // Sample Modern Projects
 const projects: Project[] = [
@@ -26,6 +27,15 @@ const projects: Project[] = [
         tags: ["VueJs", "Firebase"],
         githubLink: "https://github.com/selverie/padira-dashboard",
         liveLink: "https://padira-dashboard.vercel.app/"
+    },
+    {
+        id: 3,
+        title: "Skin Disease Prediction API",
+        description: "API for skin disease prediction, deployed on Google Cloud Run and integrated with Cloud Storage, Cloud SQL and Firebase.",
+        image: biofaceImage,
+        tags: ["Python", "Firebase", "Cloud SQL", "Cloud Run", "Cloud Storage", "Artifact Registry"],
+        githubLink: "https://github.com/selverie/Bioface-Model-API",
+        liveLink: ""
     }
 ];
 
@@ -74,10 +84,10 @@ const PortfolioContainer: React.FC = () => {
             {/* Interactive Background */}
             <InteractiveGridBackground />
 
-            {/* Back to Home Button - Top Left */}
+            {/* Back to Home Button - Responsive Position */}
             <Link
                 to="/"
-                className="fixed top-8 left-8 z-50 w-10 h-10 rounded-full border border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300 flex items-center justify-center"
+                className="fixed top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300 flex items-center justify-center shadow-sm"
             >
                 <FaArrowLeft className="text-xs" />
             </Link>
@@ -101,34 +111,34 @@ const PortfolioContainer: React.FC = () => {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Controls - Bottom Right */}
-            <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 flex gap-3 z-50">
+            {/* Navigation Controls - Responsive Position */}
+            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 lg:bottom-12 lg:right-12 flex gap-2 sm:gap-3 z-50">
                 <button
                     onClick={() => page > 0 && paginate(-1)}
                     disabled={page === 0}
-                    className={`w-12 h-12 rounded-full border transition-all duration-300 ${page === 0
+                    className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full border transition-all duration-300 shadow-sm ${page === 0
                         ? 'border-slate-200 text-slate-300 cursor-not-allowed'
                         : 'border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white hover:border-slate-900'
                         }`}
                     aria-label="Previous Project"
                 >
-                    <FaChevronLeft className="mx-auto text-sm" />
+                    <FaChevronLeft className="mx-auto text-xs sm:text-sm" />
                 </button>
                 <button
                     onClick={() => page < projects.length - 1 && paginate(1)}
                     disabled={page === projects.length - 1}
-                    className={`w-12 h-12 rounded-full border transition-all duration-300 ${page === projects.length - 1
+                    className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full border transition-all duration-300 shadow-sm ${page === projects.length - 1
                         ? 'border-slate-200 text-slate-300 cursor-not-allowed'
                         : 'border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white hover:border-slate-900'
                         }`}
                     aria-label="Next Project"
                 >
-                    <FaChevronRight className="mx-auto text-sm" />
+                    <FaChevronRight className="mx-auto text-xs sm:text-sm" />
                 </button>
             </div>
 
-            {/* Counter - Bottom Left */}
-            <div className="absolute bottom-10 left-8 text-slate-400 font-light text-sm z-50 tracking-wider">
+            {/* Counter - Responsive Position */}
+            <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8 lg:bottom-10 lg:left-8 text-slate-400 font-light text-xs sm:text-sm z-50 tracking-wider">
                 {String(page + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
             </div>
         </div>
