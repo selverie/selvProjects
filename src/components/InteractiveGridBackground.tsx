@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react';
+import { useDarkMode } from '../context/DarkModeContext';
 
 const InteractiveGridBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const mouse = useRef({ x: -1000, y: -1000 });
+    const { isDarkMode } = useDarkMode();
+    const mousePos = useRef({ x: 0, y: 0 });
+    const animationFrameId = useRef<number | null>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -11,96 +14,103 @@ const InteractiveGridBackground: React.FC = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        let dpi = window.devicePixelRatio || 1;
-
-        // Grid configuration - Minimalist
-        const spacing = 50;
-        const dotSize = 1.2;
-        const influenceRadius = 180;
-
-        const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width * dpi;
-            canvas.height = height * dpi;
-            canvas.style.width = `${width}px`;
-            canvas.style.height = `${height}px`;
-            ctx.scale(dpi, dpi);
+        // Set canvas size
+        const updateCanvasSize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         };
+        updateCanvasSize();
+        window.addEventListener('resize', updateCanvasSize);
 
+        // Mouse move handler
         const handleMouseMove = (e: MouseEvent) => {
-            const rect = canvas.getBoundingClientRect();
-            mouse.current = {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
-            };
+            mousePos.current = { x: e.clientX, y: e.clientY };
         };
-
-        const handleMouseLeave = () => {
-            mouse.current = { x: -1000, y: -1000 };
-        };
-
-        window.addEventListener('resize', resize);
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseout', handleMouseLeave);
 
-        resize();
+        // Grid settings
+        const gridSize = 40;
+        const maxDistance = 150;
 
-        let animationFrameId: number;
+        // Animation loop
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const render = () => {
-            ctx.clearRect(0, 0, width, height);
+            // Colors based on dark mode
+            const lineColor = isDarkMode ? 'rgba(148, 163, 184, 0.15)' : 'rgba(203, 213, 225, 0.4)';
+            const glowColor = isDarkMode ? 'rgba(100, 116, 139, 0.3)' : 'rgba(148, 163, 184, 0.5)';
 
-            // Draw Grid
-            const cols = Math.ceil(width / spacing);
-            const rows = Math.ceil(height / spacing);
-
-            for (let i = 0; i < cols; i++) {
-                for (let j = 0; j < rows; j++) {
-                    const x = i * spacing;
-                    const y = j * spacing;
-
-                    // Calculate distance to mouse
-                    const dx = mouse.current.x - x;
-                    const dy = mouse.current.y - y;
+            // Draw grid
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                for (let y = 0; y < canvas.height; y += gridSize) {
+                    const dx = mousePos.current.x - x;
+                    const dy = mousePos.current.y - y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    // Calculate effect - More subtle
-                    let currentDotSize = dotSize;
-                    let alpha = 0.08; // More subtle base opacity
+                    if (distance < maxDistance) {
+                        const opacity = 1 - distance / maxDistance;
+                        
+                        // Draw glowing dot
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2, 0, Math.PI * 2);
+                        ctx.fillStyle = glowColor.replace('0.3)', `${opacity * 0.3})`).replace('0.5)', `${opacity * 0.5})`);
+                        ctx.fill();
 
-                    if (distance < influenceRadius) {
-                        const factor = 1 - distance / influenceRadius;
-                        currentDotSize = dotSize + (factor * 3);
-                        alpha = 0.08 + (factor * 0.3);
+                        // Draw connecting lines to nearby points
+                        if (x + gridSize < canvas.width) {
+                            const dxNext = mousePos.current.x - (x + gridSize);
+                            const distanceNext = Math.sqrt(dxNext * dxNext + dy * dy);
+                            if (distanceNext < maxDistance) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, y);
+                                ctx.lineTo(x + gridSize, y);
+                                ctx.strokeStyle = lineColor.replace('0.15)', `${opacity * 0.15})`).replace('0.4)', `${opacity * 0.4})`);
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                            }
+                        }
+
+                        if (y + gridSize < canvas.height) {
+                            const dyNext = mousePos.current.y - (y + gridSize);
+                            const distanceNext = Math.sqrt(dx * dx + dyNext * dyNext);
+                            if (distanceNext < maxDistance) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, y);
+                                ctx.lineTo(x, y + gridSize);
+                                ctx.strokeStyle = lineColor.replace('0.15)', `${opacity * 0.15})`).replace('0.4)', `${opacity * 0.4})`);
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                            }
+                        }
+                    } else {
+                        // Draw subtle static grid
+                        ctx.beginPath();
+                        ctx.arc(x, y, 1, 0, Math.PI * 2);
+                        ctx.fillStyle = isDarkMode ? 'rgba(71, 85, 105, 0.1)' : 'rgba(203, 213, 225, 0.2)';
+                        ctx.fill();
                     }
-
-                    ctx.fillStyle = `rgba(15, 23, 42, ${alpha})`;
-                    ctx.beginPath();
-                    ctx.arc(x, y, currentDotSize, 0, Math.PI * 2);
-                    ctx.fill();
                 }
             }
 
-            animationFrameId = requestAnimationFrame(render);
+            animationFrameId.current = requestAnimationFrame(animate);
         };
 
-        render();
+        animate();
 
         return () => {
-            window.removeEventListener('resize', resize);
+            window.removeEventListener('resize', updateCanvasSize);
             window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseout', handleMouseLeave);
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId.current) {
+                cancelAnimationFrame(animationFrameId.current);
+            }
         };
-    }, []);
+    }, [isDarkMode]);
 
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none z-0"
+            className="absolute inset-0 w-full h-full"
+            style={{ pointerEvents: 'none' }}
         />
     );
 };

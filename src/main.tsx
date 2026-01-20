@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
+import { DarkModeProvider } from './context/DarkModeContext'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <DarkModeProvider>
+        <App />
+      </DarkModeProvider>
     </BrowserRouter>
   </StrictMode>,
 )

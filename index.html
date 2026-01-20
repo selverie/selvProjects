@@ -5,6 +5,30 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>portfolio</title>
+    <!-- Prevent white flash - Apply dark mode IMMEDIATELY -->
+    <script>
+      // This runs BEFORE anything else loads
+      (function() {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    
+    <style>
+      html, body, #root {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #ffffff;
+      }
+      /* Dark mode mengikuti class 'dark' yang di-set oleh script di atas */
+      html.dark, html.dark body, html.dark #root {
+        background-color: #020617;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

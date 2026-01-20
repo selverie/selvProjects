@@ -5,6 +5,15 @@
 @tailwind utilities;
 
 @layer base {
+  /* Reset color-scheme untuk mencegah dark mode sistem */
+  html {
+    color-scheme: light;
+  }
+  
+  html.dark {
+    color-scheme: dark;
+  }
+  
   body {
     @apply bg-primary text-secondary font-sans overflow-hidden;
   }
