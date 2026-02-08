@@ -1,49 +1,118 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import ProjectCard, { type Project } from '../components/ProjectCard';
-import { FaChevronLeft, FaChevronRight, FaArrowLeft, FaGithub } from 'react-icons/fa';
-import InteractiveGridBackground from '../components/InteractiveGridBackground';
-import mobileImage from '../assets/images/mobile.png';
-import websiteImage from '../assets/images/website.png';
-import biofaceImage from '../assets/images/bioface.png';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import ProjectCard, { type Project } from "../components/ProjectCard";
+import {
+    FaChevronLeft,
+    FaChevronRight,
+    FaArrowLeft,
+    FaGithub,
+} from "react-icons/fa";
+import InteractiveGridBackground from "../components/InteractiveGridBackground";
+import mobileImage from "../assets/images/mobile.png";
+import websiteImage from "../assets/images/website.png";
+import biofaceImage from "../assets/images/bioface.png";
+import gemfundImage from "../assets/images/gemfund.png";
 
 // Sample Modern Projects
 const projects: Project[] = [
     {
         id: 1,
         title: "Padira Mobile App",
-        description: "A Flutter-based mobile application for a rice distribution system that connects farmers, millers, and distributors in one integrated ecosystem.",
+        description:
+            "Padira Mobile App is a Flutter-based agricultural distribution platform that connects farmers, rice mills, and distributors into a single integrated ecosystem.",
         image: mobileImage,
         tags: ["Flutter", "Firebase"],
+        type: "personal",
+        details: [
+            "Developed a role-based mobile system for farmers, rice mills, and distributors",
+            "Implemented real-time product trading for unhusked rice (gabah) and rice (beras)",
+            "Built interactive maps and live location tracking between buyers and sellers",
+            "Designed an order management system with payment and status tracking",
+            "Integrated Midtrans payment gateway (BCA) alongside COD payments",
+            "Implemented price recommendations and agricultural news for informed decision-making",
+            "Built real-time notifications, including floating alerts for order updates",
+            "Utilized Firebase services for authentication, database, and real-time synchronization"
+        ],
         githubLink: "https://github.com/selverie/padira-mobile",
-        liveLink: ""
+        liveLink: "",
     },
     {
         id: 2,
         title: "Padira Dashboard Admin",
-        description: "Admin dashboard to monitor farmer, miller, and distributor data in the agricultural ecosystem.",
+        description:
+            "Padira Dashboard Admin is a web-based monitoring dashboard designed for institutions to oversee agricultural production, distribution, and system operations.",
         image: websiteImage,
         tags: ["VueJs", "Firebase"],
+        type: "personal",
+        details: [
+            "Developed a responsive admin dashboard using Vue.js 3",
+            "Built monthly production analytics comparing gabah and rice outputs",
+            "Implemented real-time monitoring of agricultural and milling data",
+            "Enabled data export to Excel and PDF for reporting purposes",
+            "Integrated live map visualization for product locations (farmers & rice mills)",
+            "Developed price, news, and notification management modules",
+            "Implemented user and role management for system access control",
+            "•Built application maintenance controls for Android app management"
+        ],
         githubLink: "https://github.com/selverie/padira-dashboard",
-        liveLink: "https://padira-dashboard.vercel.app/"
+        liveLink: "https://padira-dashboard.vercel.app/",
     },
     {
         id: 3,
-        title: "Skin Disease Prediction API",
-        description: "API for skin disease prediction, deployed on Google Cloud Run and integrated with Cloud Storage, Cloud SQL and Firebase.",
+        title: "BioFace",
+        description:
+            "BioFace is a cloud-based skin disease prediction system designed to help users identify facial skin conditions and receive natural treatment recommendations using herbal ingredients.",
         image: biofaceImage,
-        tags: ["Python", "Firebase", "Cloud SQL", "Cloud Run", "Cloud Storage", "Artifact Registry"],
-        githubLink: "https://github.com/selverie/Bioface-Model-API",
-        liveLink: ""
-    }
+        tags: [
+            "Google Cloud Platform",
+            "Kotlin",
+            "Python",
+            "JavaScipt",
+            "Firebase",
+        ],
+        type: "collaboration",
+        details: [
+            "Developed a skin disease prediction REST API using Python Flask",
+            "Integrated a TensorFlow-based machine learning model for image classification",
+            "Implemented image upload and storage using Google Cloud Storage",
+            "Designed user prediction history storage using Cloud SQL (PostgreSQL)",
+            "Deployed containerized API to Google Cloud Run with auto-scaling support",
+            "Configured CI/CD pipeline using Artifact Registry",
+            "Integrated Firebase Authentication for secure API access",
+            "Implemented API security features including rate limiting and API key management"
+        ],
+        githubLink: "https://github.com/Project-BioFace",
+        liveLink: "",
+    },
+    {
+        id: 4,
+        title: "GemFund",
+        description:
+            "GemFund is a Flutter-based mobile crowdfunding application designed to improve user trust through a clean, intuitive, and transparent user experience.",
+        image: gemfundImage,
+        tags: [
+            "Gemini3",
+            "Flutter",
+            "TypeScript",
+            "Supabase"
+        ],
+        type: "collaboration",
+        details: [
+            "Developed the mobile application UI using Flutter",
+            "Designed intuitive and user-friendly UI/UX for crowdfunding workflows",
+            "Ensured consistent design and smooth user experience across the application"
+        ],
+        githubLink: "https://github.com/GemFund",
+        liveLink: "",
+    },
 ];
 
 const variants = {
     enter: (direction: number) => ({
-        x: direction > 0 ? '100%' : '-100%',
+        x: direction > 0 ? "100%" : "-100%",
         opacity: 0,
-        zIndex: 0
+        zIndex: 0,
     }),
     center: {
         zIndex: 1,
@@ -52,9 +121,9 @@ const variants = {
     },
     exit: (direction: number) => ({
         zIndex: 0,
-        x: direction < 0 ? '100%' : '-100%',
+        x: direction < 0 ? "100%" : "-100%",
         opacity: 0,
-    })
+    }),
 };
 
 const PortfolioContainer: React.FC = () => {
@@ -73,15 +142,15 @@ const PortfolioContainer: React.FC = () => {
         const handleKeyDown = (e: KeyboardEvent) => {
             // Disable keyboard navigation when modal is open
             if (isImageModalOpen) return;
-            
-            if (e.key === 'ArrowRight') {
+
+            if (e.key === "ArrowRight") {
                 if (page < totalSlides - 1) paginate(1);
-            } else if (e.key === 'ArrowLeft') {
+            } else if (e.key === "ArrowLeft") {
                 if (page > 0) paginate(-1);
             }
         };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
     }, [page, isImageModalOpen]);
 
     return (
@@ -110,13 +179,13 @@ const PortfolioContainer: React.FC = () => {
                     exit="exit"
                     transition={{
                         x: { type: "spring", stiffness: 280, damping: 32 },
-                        opacity: { duration: 0.3 }
+                        opacity: { duration: 0.3 },
                     }}
                     className="absolute inset-0 w-full h-full"
                 >
                     {page < projects.length ? (
-                        <ProjectCard 
-                            project={projects[page]} 
+                        <ProjectCard
+                            project={projects[page]}
                             onImageModalChange={setIsImageModalOpen}
                         />
                     ) : (
@@ -131,15 +200,16 @@ const PortfolioContainer: React.FC = () => {
                                 <div className="mb-8 md:mb-12">
                                     <FaGithub className="text-6xl md:text-7xl lg:text-8xl mx-auto text-slate-900 dark:text-slate-100 mb-6" />
                                 </div>
-                                
+
                                 <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-slate-900 dark:text-slate-100 leading-[1.1] tracking-tight mb-6 md:mb-8">
                                     More Projects
                                 </h2>
-                                
+
                                 <p className="text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-light mb-8 md:mb-12">
-                                    Check out more of my work and open source contributions on GitHub
+                                    Check out more of my work and open source contributions on
+                                    GitHub
                                 </p>
-                                
+
                                 <a
                                     href="https://github.com/selverie"
                                     target="_blank"
@@ -162,8 +232,8 @@ const PortfolioContainer: React.FC = () => {
                         onClick={() => page > 0 && paginate(-1)}
                         disabled={page === 0}
                         className={`w-10 h-10 md:w-12 md:h-12 rounded-full border transition-all duration-300 shadow-sm ${page === 0
-                            ? 'border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                            : 'border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100'
+                            ? "border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed"
+                            : "border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100"
                             }`}
                         aria-label="Previous Project"
                     >
@@ -173,8 +243,8 @@ const PortfolioContainer: React.FC = () => {
                         onClick={() => page < totalSlides - 1 && paginate(1)}
                         disabled={page === totalSlides - 1}
                         className={`w-10 h-10 md:w-12 md:h-12 rounded-full border transition-all duration-300 shadow-sm ${page === totalSlides - 1
-                            ? 'border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                            : 'border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100'
+                            ? "border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed"
+                            : "border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100"
                             }`}
                         aria-label="Next Project"
                     >
@@ -186,7 +256,8 @@ const PortfolioContainer: React.FC = () => {
             {/* Counter - Hidden when modal is open */}
             {!isImageModalOpen && (
                 <div className="fixed bottom-4 left-4 md:bottom-8 md:left-8 text-slate-400 dark:text-slate-600 font-light text-xs md:text-sm z-50 tracking-wider transition-colors duration-500">
-                    {String(page + 1).padStart(2, '0')} / {String(totalSlides).padStart(2, '0')}
+                    {String(page + 1).padStart(2, "0")} /{" "}
+                    {String(totalSlides).padStart(2, "0")}
                 </div>
             )}
         </div>

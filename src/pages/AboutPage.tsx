@@ -1,15 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaDownload, FaAward } from 'react-icons/fa';
 import InteractiveGridBackground from '../components/InteractiveGridBackground';
 
 const AboutPage: React.FC = () => {
+    const handleDownloadCV = () => {
+        // Ganti path ini dengan path file CV yang sebenarnya
+        const cvPath = '/cv.pdf'; // atau '/assets/cv.pdf' sesuai lokasi file CV Anda
+        const link = document.createElement('a');
+        link.href = cvPath;
+        link.download = 'Kun_CV.pdf'; // Nama file saat didownload
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleViewCertificate = () => {
+        // Ganti URL ini dengan link Google Drive Anda
+        const driveUrl = 'https://drive.google.com/drive/folders/YOUR_FOLDER_ID'; // Ganti dengan link Google Drive Anda
+        window.open(driveUrl, '_blank');
+    };
+
     return (
         <div className="min-h-screen w-full bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-500">
             {/* Interactive Background */}
             <InteractiveGridBackground />
-
+            
             {/* Back Button - Bottom Right */}
             <Link
                 to="/"
@@ -17,7 +34,7 @@ const AboutPage: React.FC = () => {
             >
                 <FaArrowLeft className="text-xs md:text-sm" />
             </Link>
-
+            
             {/* Content */}
             <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-8 py-20 md:py-32 lg:py-40">
                 <motion.div
@@ -30,14 +47,14 @@ const AboutPage: React.FC = () => {
                     <h1 className="text-4xl sm:text-5xl md:text-7xl font-light text-slate-900 dark:text-slate-100 tracking-tight transition-colors duration-500">
                         About Me
                     </h1>
-
+                    
                     {/* Content */}
                     <div className="space-y-5 md:space-y-6 text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed font-light transition-colors duration-500">
                         <p>
                             Hello, everyone! I'm Kun, a motivated individual with a strong desire to become a Full Stack Web Developer. My journey in the world of web development has been a thrilling adventure, and I am eager to take on new challenges to craft innovative solutions. Equipped with a solid foundation in programming languages. I am committed to honing my skills and learning new technologies. Let's connect and collaborate to build web applications together!
                         </p>
                     </div>
-
+                    
                     {/* Skills/Tech Stack */}
                     <div className="pt-6 md:pt-8">
                         <h3 className="text-xs md:text-sm uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-medium mb-5 md:mb-6 transition-colors duration-500">
@@ -50,6 +67,25 @@ const AboutPage: React.FC = () => {
                             <div>Interactive Experiences</div>
                             <div>UI Implementation</div>
                         </div>
+                    </div>
+                    
+                    {/* Download/View Buttons */}
+                    <div className="pt-4 flex flex-wrap gap-4">
+                        <button
+                            onClick={handleDownloadCV}
+                            className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100 transition-all duration-300 text-xs md:text-sm uppercase tracking-[0.15em] font-medium rounded-full"
+                        >
+                            <FaDownload className="text-base md:text-lg" />
+                            <span>Download CV</span>
+                        </button>
+                        
+                        <button
+                            onClick={handleViewCertificate}
+                            className="inline-flex items-center gap-3 px-6 py-3 md:px-8 md:py-4 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-900 dark:hover:bg-slate-100 hover:text-white dark:hover:text-slate-900 hover:border-slate-900 dark:hover:border-slate-100 transition-all duration-300 text-xs md:text-sm uppercase tracking-[0.15em] font-medium rounded-full"
+                        >
+                            <FaAward className="text-base md:text-lg" />
+                            <span>View Certificate</span>
+                        </button>
                     </div>
                 </motion.div>
             </div>
